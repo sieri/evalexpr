@@ -1,5 +1,17 @@
 # Change Log
 
+## [13.1.0](https://github.com/ISibboI/evalexpr/compare/13.0.0...13.1.0) - 2025-11-26
+
+### Added
+
+ * Parse integers prefixed with `0b` as binary and `0o` as octal (#194)
+
+### Contributors
+
+My warmhearted thanks goes to:
+
+ * [Valentine Briese](https://github.com/valentinegb)
+
 ## [13.0.0](https://github.com/ISibboI/evalexpr/compare/12.0.3...13.0.0) - 2025-10-29
 
 ### Added
