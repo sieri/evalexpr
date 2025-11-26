@@ -58,6 +58,14 @@ pub trait EvalexprInt<NumericTypes: EvalexprNumericTypes<Int = Self>>:
     #[expect(clippy::result_unit_err)]
     fn from_hex_str(literal: &str) -> Result<Self, ()>;
 
+    /// Parse `Self` from a binary string.
+    #[expect(clippy::result_unit_err)]
+    fn from_binary_str(literal: &str) -> Result<Self, ()>;
+
+    /// Parse `Self` from an octal string.
+    #[expect(clippy::result_unit_err)]
+    fn from_octal_str(literal: &str) -> Result<Self, ()>;
+
     /// Perform an addition operation, returning an error on overflow.
     fn checked_add(&self, rhs: &Self) -> EvalexprResult<Self, NumericTypes>;
 

@@ -402,7 +402,7 @@ fn partial_tokens_to_tokens<NumericTypes: EvalexprNumericTypes>(
             },
             PartialToken::Literal(literal) => {
                 cutoff = 1;
-                if let Ok(number) = parse_dec_or_hex::<NumericTypes>(&literal) {
+                if let Ok(number) = parse_integer::<NumericTypes>(&literal) {
                     Some(Token::Int(number))
                 } else if let Ok(number) = literal.parse::<NumericTypes::Float>() {
                     Some(Token::Float(number))
@@ -495,11 +495,16 @@ pub(crate) fn tokenize<NumericTypes: EvalexprNumericTypes>(
     partial_tokens_to_tokens(&str_to_partial_tokens(string)?)
 }
 
-fn parse_dec_or_hex<NumericTypes: EvalexprNumericTypes>(
+/// Can parse decimal (base 10), hexadecimal (base 16), binary (base 2), or octal (base 8).
+fn parse_integer<NumericTypes: EvalexprNumericTypes>(
     literal: &str,
 ) -> Result<NumericTypes::Int, ()> {
     if let Some(literal) = literal.strip_prefix("0x") {
         NumericTypes::Int::from_hex_str(literal)
+    } else if let Some(literal) = literal.strip_prefix("0b") {
+        NumericTypes::Int::from_binary_str(literal)
+    } else if let Some(literal) = literal.strip_prefix("0o") {
+        NumericTypes::Int::from_octal_str(literal)
     } else {
         NumericTypes::Int::from_str(literal).map_err(|_| ())
     }
@@ -546,11 +551,11 @@ mod tests {
         let token_string =
             "+ - * / % ^ == != > < >= <= && || ! ( ) = += -= *= /= %= ^= &&= ||= , ; ";
 
-        let token_string_with_comments = r"+ - * / % ^ == != > 
-            < >= <= && /* inline comment */ || ! ( ) 
+        let token_string_with_comments = r"+ - * / % ^ == != >
+            < >= <= && /* inline comment */ || ! ( )
             = += -= *= /= %= ^=
             // line comment
-            &&= ||= , ; 
+            &&= ||= , ;
             ";
 
         let tokens = tokenize::<DefaultNumericTypes>(token_string_with_comments).unwrap();

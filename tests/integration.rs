@@ -2427,6 +2427,32 @@ fn test_hex() {
 }
 
 #[test]
+fn test_binary() {
+    assert_eq!(eval("0b11"), Ok(Value::Int(3)));
+    assert_eq!(eval("0b0101"), Ok(Value::Int(5)));
+    assert_eq!(eval("0b11111111"), Ok(Value::Int(255)));
+    assert_eq!(eval("-0b11111111"), Ok(Value::Int(-255)));
+    assert_eq!(
+        eval("0b2"),
+        // See `test_hex`.
+        Err(EvalexprError::VariableIdentifierNotFound("0b2".into()))
+    );
+}
+
+#[test]
+fn test_octal() {
+    assert_eq!(eval("0o12"), Ok(Value::Int(10)));
+    assert_eq!(eval("0o3"), Ok(Value::Int(3)));
+    assert_eq!(eval("0o377"), Ok(Value::Int(255)));
+    assert_eq!(eval("-0o377"), Ok(Value::Int(-255)));
+    assert_eq!(
+        eval("0o8"),
+        // See `test_hex`.
+        Err(EvalexprError::VariableIdentifierNotFound("0o8".into()))
+    );
+}
+
+#[test]
 fn test_broken_string() {
     assert_eq!(
         eval(r#""abc" == "broken string"#),

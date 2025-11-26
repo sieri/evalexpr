@@ -50,6 +50,14 @@ impl<NumericTypes: EvalexprNumericTypes<Int = Self>> EvalexprInt<NumericTypes> f
         Self::from_str_radix(literal, 16).map_err(|_| ())
     }
 
+    fn from_binary_str(literal: &str) -> Result<Self, ()> {
+        Self::from_str_radix(literal, 2).map_err(|_| ())
+    }
+
+    fn from_octal_str(literal: &str) -> Result<Self, ()> {
+        Self::from_str_radix(literal, 8).map_err(|_| ())
+    }
+
     fn checked_add(&self, rhs: &Self) -> EvalexprResult<Self, NumericTypes> {
         let result = (*self).checked_add(*rhs);
         if let Some(result) = result {
