@@ -6,7 +6,7 @@ use crate::{
         TupleType,
     },
     Context, ContextWithMutableVariables, EmptyType, EvalexprError, EvalexprResult, HashMapContext,
-    Node, Value, EMPTY_VALUE,
+    Node, Operator, Value, EMPTY_VALUE,
 };
 
 /// Evaluate the given expression string.
@@ -356,4 +356,13 @@ pub fn eval_empty_with_context_mut<C: ContextWithMutableVariables>(
         Ok(value) => Err(EvalexprError::expected_empty(value)),
         Err(error) => Err(error),
     }
+}
+
+/// Combined two prebuilt trees around an operator
+pub fn combine_trees<NumericTypes: EvalexprNumericTypes>(
+    a: &Node<NumericTypes>,
+    b: &Node<NumericTypes>,
+    operator: Operator<NumericTypes>,
+) -> EvalexprResult<Node<NumericTypes>, NumericTypes> {
+    tree::combine_trees(a, b, operator)
 }
