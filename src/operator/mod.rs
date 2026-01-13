@@ -121,7 +121,7 @@ impl<NumericTypes: EvalexprNumericTypes> Operator<NumericTypes> {
 
     /// Returns the precedence of the operator.
     /// A high precedence means that the operator has priority to be deeper in the tree.
-    pub(crate) const fn precedence(&self) -> i32 {
+    pub const fn precedence(&self) -> i32 {
         use crate::operator::Operator::*;
         match self {
             RootNode => 200,
@@ -151,25 +151,25 @@ impl<NumericTypes: EvalexprNumericTypes> Operator<NumericTypes> {
     /// Returns true if chains of operators with the same precedence as this one should be evaluated left-to-right,
     /// and false if they should be evaluated right-to-left.
     /// Left-to-right chaining has priority if operators with different order but same precedence are chained.
-    pub(crate) const fn is_left_to_right(&self) -> bool {
+    pub const fn is_left_to_right(&self) -> bool {
         use crate::operator::Operator::*;
         !matches!(self, Assign | FunctionIdentifier { .. })
     }
 
     /// Returns true if chains of this operator should be flattened into one operator with many arguments.
-    pub(crate) const fn is_sequence(&self) -> bool {
+    pub const fn is_sequence(&self) -> bool {
         use crate::operator::Operator::*;
         matches!(self, Tuple | Chain)
     }
 
     /// True if this operator is a leaf, meaning it accepts no arguments.
     // Make this a const fn as soon as whatever is missing gets stable (issue #57563)
-    pub(crate) fn is_leaf(&self) -> bool {
+    pub fn is_leaf(&self) -> bool {
         self.max_argument_amount() == Some(0)
     }
 
     /// Returns the maximum amount of arguments required by this operator.
-    pub(crate) const fn max_argument_amount(&self) -> Option<usize> {
+    pub const fn max_argument_amount(&self) -> Option<usize> {
         use crate::operator::Operator::*;
         match self {
             Add | Sub | Mul | Div | Mod | Exp | Eq | Neq | Gt | Lt | Geq | Leq | And | Or
@@ -184,7 +184,7 @@ impl<NumericTypes: EvalexprNumericTypes> Operator<NumericTypes> {
     }
 
     /// Returns true if this operator is unary, i.e. it requires exactly one argument.
-    pub(crate) fn is_unary(&self) -> bool {
+    pub fn is_unary(&self) -> bool {
         self.max_argument_amount() == Some(1) && *self != Operator::RootNode
     }
 
